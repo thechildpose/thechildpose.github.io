@@ -3,8 +3,7 @@
 发表日期: 2026-05-10
 发表平台: null
 tags:
-  - 自由意志
-  - 诗歌
+  - 独立意志
 类型: null
 原文: null
 译文: null
@@ -14,6 +13,8 @@ publish: true
 title: 世界上最小的3D打印机
 published: 2026-05-10
 ---
+2026年5月10日
+
 ![[Pasted image 20260721120639.png]]
 
 ![[Pasted image 20260721120649.png]]

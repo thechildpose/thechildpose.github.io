@@ -1,9 +1,10 @@
 ---
 title: 听话和listen to me
 publish: true
-网站文件夹: Fundamentals 基础理念
+网站文件夹: 基础理念 Fundamentals
 tags:
   - 独立意志
+类型: null
 ---
 
 

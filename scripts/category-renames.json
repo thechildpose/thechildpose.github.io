@@ -1,0 +1,6 @@
+{
+  "_说明": "把 vault 文章里写的旧文件夹名映射到新文件夹名，改这里就能批量重命名，不用逐篇改文章。格式：旧名: 新名",
+  "Schooling 学校": "学校 Schooling",
+  "Fundamentals 基础理念": "基础理念 Fundamentals",
+  "Guided Play 引导式玩耍案例": "引导式玩耍案例 Guided Play"
+}

@@ -8,6 +8,9 @@ const ATTACHMENTS_DIR = path.join(VAULT_ROOT, "attachments")
 const DEST_DIR = path.join(import.meta.dirname, "..", "content")
 const DEST_ATTACHMENTS_DIR = path.join(DEST_DIR, "attachments")
 const PRESERVED_TOP_LEVEL_ENTRIES = new Set([".gitkeep", "attachments", "index.md"])
+const CATEGORY_RENAMES = JSON.parse(
+  fs.readFileSync(path.join(import.meta.dirname, "category-renames.json"), "utf-8"),
+)
 
 function stripBracketTags(title) {
   return title.replace(/^(【[^】]*】)+/, "").trim()
@@ -63,7 +66,8 @@ for (const file of files) {
   const publicBody = extractPublicBody(body)
   syncEmbeddedAttachments(publicBody)
 
-  const category = typeof frontmatter.网站文件夹 === "string" ? frontmatter.网站文件夹.trim() : ""
+  const rawCategory = typeof frontmatter.网站文件夹 === "string" ? frontmatter.网站文件夹.trim() : ""
+  const category = CATEGORY_RENAMES[rawCategory] ?? rawCategory
   const targetDir = category ? path.join(DEST_DIR, category) : DEST_DIR
   fs.mkdirSync(targetDir, { recursive: true })
 

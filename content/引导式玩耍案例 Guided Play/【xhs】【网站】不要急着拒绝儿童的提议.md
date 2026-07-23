@@ -5,13 +5,12 @@
 tags:
   - 玩具
   - 数学
-  - 磁力片
 类型: null
 原文: null
 译文: null
 weight: standard
 publish: true
-网站文件夹: Guided Play 引导式玩耍案例
+网站文件夹: 引导式玩耍案例 Guided Play
 title: 不要急着拒绝儿童的提议
 published: 2026-06-22
 ---

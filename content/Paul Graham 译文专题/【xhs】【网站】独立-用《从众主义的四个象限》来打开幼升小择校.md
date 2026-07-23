@@ -8,7 +8,7 @@ tags:
 原文: "[[PG-The Four Quadrants of Conformism]]"
 译文: null
 weight: standard
-网站文件夹: Paul Graham译文专题
+网站文件夹: Paul Graham 译文专题
 publish: true
 title: 用《从众主义的四个象限》来打开幼升小择校
 published: 2026-03-25

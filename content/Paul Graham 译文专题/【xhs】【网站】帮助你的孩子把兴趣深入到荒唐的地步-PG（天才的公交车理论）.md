@@ -9,7 +9,7 @@ tags:
 原文: "[[PG-The Bus Ticket Theory of Genius]]"
 译文: null
 publish: true
-网站文件夹: Paul Graham译文专题
+网站文件夹: Paul Graham 译文专题
 title: 帮助你的孩子把兴趣深入到荒唐的地步
 published: 2026-05-21
 ---
