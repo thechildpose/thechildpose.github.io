@@ -13,6 +13,12 @@ function stripBracketTags(title) {
   return title.replace(/^(【[^】]*】)+/, "").trim()
 }
 
+function extractPublicBody(body) {
+  const marker = body.match(/^##\s*正文\s*$/m)
+  if (!marker) return body
+  return body.slice(marker.index + marker[0].length).replace(/^\n+/, "")
+}
+
 fs.mkdirSync(DEST_DIR, { recursive: true })
 for (const existing of fs.readdirSync(DEST_DIR)) {
   if (PRESERVED_TOP_LEVEL_ENTRIES.has(existing)) continue
@@ -51,13 +57,14 @@ for (const file of files) {
     frontmatter.title = frontmatter.标题 || stripBracketTags(path.basename(file, ".md"))
   }
 
-  syncEmbeddedAttachments(body)
+  const publicBody = extractPublicBody(body)
+  syncEmbeddedAttachments(publicBody)
 
   const category = typeof frontmatter.网站文件夹 === "string" ? frontmatter.网站文件夹.trim() : ""
   const targetDir = category ? path.join(DEST_DIR, category) : DEST_DIR
   fs.mkdirSync(targetDir, { recursive: true })
 
-  const newRaw = `---\n${YAML.stringify(frontmatter)}---\n${body}`
+  const newRaw = `---\n${YAML.stringify(frontmatter)}---\n${publicBody}`
   fs.writeFileSync(path.join(targetDir, file), newRaw, "utf-8")
   publishedCount++
 }
