@@ -6,12 +6,12 @@ cd "$REPO_DIR"
 
 node scripts/sync-content.mjs
 
-if [[ -z "$(git status --porcelain content/posts)" ]]; then
+if [[ -z "$(git status --porcelain content)" ]]; then
   echo "No changes to publish."
   exit 0
 fi
 
-git add content/posts
+git add content
 git commit -m "Sync published articles $(date '+%Y-%m-%d %H:%M')"
 git push origin v5
 
