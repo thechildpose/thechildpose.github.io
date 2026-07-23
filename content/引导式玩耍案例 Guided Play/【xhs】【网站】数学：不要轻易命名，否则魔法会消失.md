@@ -3,7 +3,7 @@
 publish: true
 tags:
   - 数学
-title: 数学：不要轻易命名，否则魔法会消失
+title: 不要轻易命名，否则魔法会消失
 ---
 
 

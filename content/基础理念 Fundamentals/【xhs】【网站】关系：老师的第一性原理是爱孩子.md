@@ -1,6 +1,6 @@
 ---
 标题: 老师的第一性原理
-发表日期: 2026-07-21
+发表日期: 2026-06-18
 发表平台: null
 tags:
   - 老师
@@ -11,8 +11,8 @@ weight: standard
 网站文件夹: 基础理念 Fundamentals
 publish: true
 title: 老师的第一性原理
-published: 2026-07-21
+published: 2026-06-18
 ---
-2026年7月21日
+2026年6月18日
 
 ![[Pasted image 20260721120120.png]]
