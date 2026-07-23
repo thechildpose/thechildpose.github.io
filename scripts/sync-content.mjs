@@ -5,8 +5,9 @@ import YAML from "yaml"
 const VAULT_ROOT = "/Users/sylvia/Library/Mobile Documents/com~apple~CloudDocs/Obsidian/Second-Brain"
 const VAULT_DIR = path.join(VAULT_ROOT, "raw", "1-mywriting")
 const ATTACHMENTS_DIR = path.join(VAULT_ROOT, "attachments")
-const DEST_DIR = path.join(import.meta.dirname, "..", "content", "posts")
-const DEST_ATTACHMENTS_DIR = path.join(import.meta.dirname, "..", "content", "attachments")
+const DEST_DIR = path.join(import.meta.dirname, "..", "content")
+const DEST_ATTACHMENTS_DIR = path.join(DEST_DIR, "attachments")
+const PRESERVED_TOP_LEVEL_ENTRIES = new Set([".gitkeep", "attachments", "index.md"])
 
 function stripBracketTags(title) {
   return title.replace(/^(【[^】]*】)+/, "").trim()
@@ -14,6 +15,7 @@ function stripBracketTags(title) {
 
 fs.mkdirSync(DEST_DIR, { recursive: true })
 for (const existing of fs.readdirSync(DEST_DIR)) {
+  if (PRESERVED_TOP_LEVEL_ENTRIES.has(existing)) continue
   fs.rmSync(path.join(DEST_DIR, existing), { recursive: true, force: true })
 }
 fs.mkdirSync(DEST_ATTACHMENTS_DIR, { recursive: true })
