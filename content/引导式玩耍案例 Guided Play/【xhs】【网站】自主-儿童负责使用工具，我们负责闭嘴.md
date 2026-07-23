@@ -10,7 +10,7 @@ tags:
 译文: null
 weight: standard
 publish: true
-网站文件夹: Guided Play 引导式玩耍案例
+网站文件夹: 引导式玩耍案例 Guided Play
 title: 儿童负责使用工具，我们负责闭嘴
 published: 2026-07-03
 ---

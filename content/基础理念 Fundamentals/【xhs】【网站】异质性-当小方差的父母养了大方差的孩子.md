@@ -3,14 +3,13 @@
 发表日期: 2026-05-28
 发表平台: null
 tags:
-  - 过早优化
   - 异质性
 类型: 原创
 原文: null
 译文: null
 weight: core
 publish: true
-网站文件夹: Fundamentals 基础理念
+网站文件夹: 基础理念 Fundamentals
 title: 当小方差的父母养了大方差的孩子
 published: 2026-05-28
 ---

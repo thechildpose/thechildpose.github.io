@@ -10,7 +10,7 @@ tags:
 译文: null
 weight: core
 publish: true
-网站文件夹: Fundamentals 基础理念
+网站文件夹: 基础理念 Fundamentals
 title: 天才可能是一种大脑结构易感性的异常
 published: 2026-06-16
 ---

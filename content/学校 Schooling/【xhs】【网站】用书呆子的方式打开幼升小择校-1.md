@@ -10,7 +10,7 @@ tags:
 译文: null
 weight: standard
 publish: true
-网站文件夹: Schooling 学校
+网站文件夹: 学校 Schooling
 title: 用书呆子的方式打开幼升小择校 Part 1
 published: 2026-03-26
 ---
