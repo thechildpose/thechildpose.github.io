@@ -202,7 +202,7 @@ plugins:
         lang: zh-CN
     layout:
       position: afterBody
-      priority: 10
+      priority: 30
   - source: "@quartz-community/footer"
     enabled: true
     options:
