@@ -51,7 +51,7 @@ for (const file of files) {
 
   syncEmbeddedAttachments(body)
 
-  const category = typeof frontmatter.分类 === "string" ? frontmatter.分类.trim() : ""
+  const category = typeof frontmatter.网站文件夹 === "string" ? frontmatter.网站文件夹.trim() : ""
   const targetDir = category ? path.join(DEST_DIR, category) : DEST_DIR
   fs.mkdirSync(targetDir, { recursive: true })
 
