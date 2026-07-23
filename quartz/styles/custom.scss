@@ -1,3 +1,9 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
+
+// Hide the auto-generated publish/modified date next to reading time;
+// each article shows its own writing date in the body instead.
+.content-meta time {
+  display: none;
+}
