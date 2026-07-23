@@ -2,8 +2,8 @@
 
 // put your custom CSS here!
 
-// Hide the auto-generated publish/modified date next to reading time;
+// Hide the auto-generated date shown under folder/tag page listings;
 // each article shows its own writing date in the body instead.
-.content-meta time {
+.page-listing .meta time {
   display: none;
 }
