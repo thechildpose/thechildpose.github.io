@@ -12,6 +12,7 @@ weight: core
 publish: true
 网站文件夹: Fundamentals 基础理念
 title: 天才可能是一种大脑结构易感性的异常
+published: 2026-06-16
 ---
 这又是一篇关于“异常值”的思考。
 

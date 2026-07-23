@@ -56,6 +56,9 @@ for (const file of files) {
   if (!frontmatter.title) {
     frontmatter.title = frontmatter.标题 || stripBracketTags(path.basename(file, ".md"))
   }
+  if (!frontmatter.published && frontmatter.发表日期) {
+    frontmatter.published = frontmatter.发表日期
+  }
 
   const publicBody = extractPublicBody(body)
   syncEmbeddedAttachments(publicBody)

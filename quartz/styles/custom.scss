@@ -1,9 +1,3 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
-
-// Hide the auto-generated date shown under folder/tag page listings;
-// each article shows its own writing date in the body instead.
-.page-listing .meta time {
-  display: none;
-}
