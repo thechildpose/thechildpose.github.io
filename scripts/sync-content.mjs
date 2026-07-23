@@ -14,7 +14,7 @@ function stripBracketTags(title) {
 
 fs.mkdirSync(DEST_DIR, { recursive: true })
 for (const existing of fs.readdirSync(DEST_DIR)) {
-  fs.rmSync(path.join(DEST_DIR, existing))
+  fs.rmSync(path.join(DEST_DIR, existing), { recursive: true, force: true })
 }
 fs.mkdirSync(DEST_ATTACHMENTS_DIR, { recursive: true })
 for (const existing of fs.readdirSync(DEST_ATTACHMENTS_DIR)) {
@@ -51,8 +51,12 @@ for (const file of files) {
 
   syncEmbeddedAttachments(body)
 
+  const category = typeof frontmatter.分类 === "string" ? frontmatter.分类.trim() : ""
+  const targetDir = category ? path.join(DEST_DIR, category) : DEST_DIR
+  fs.mkdirSync(targetDir, { recursive: true })
+
   const newRaw = `---\n${YAML.stringify(frontmatter)}---\n${body}`
-  fs.writeFileSync(path.join(DEST_DIR, file), newRaw, "utf-8")
+  fs.writeFileSync(path.join(targetDir, file), newRaw, "utf-8")
   publishedCount++
 }
 
