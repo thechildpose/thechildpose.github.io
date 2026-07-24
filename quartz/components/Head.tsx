@@ -225,6 +225,170 @@ export default (() => {
   document.addEventListener("nav", setup);
   document.addEventListener("render", setup);
 })();
+
+(function () {
+  var STORAGE_KEY = "tcp-stack-trail";
+  var VISIBLE_COUNT = 2;
+  var container, closeBtn;
+
+  function basePath() {
+    return (document.body && document.body.dataset && document.body.dataset.basepath) || "";
+  }
+
+  function currentSlug() {
+    var bp = basePath();
+    var slug = window.location.pathname;
+    if (bp && slug.indexOf(bp) === 0) slug = slug.slice(bp.length);
+    slug = slug.replace(/^\\/+/, "").replace(/\\/+$/, "");
+    return slug || "index";
+  }
+
+  function getTrail() {
+    try {
+      var raw = sessionStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return [];
+  }
+
+  function setTrail(trail) {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(trail));
+    } catch (e) {}
+  }
+
+  function slugToHref(slug) {
+    return (
+      basePath() +
+      "/" +
+      slug
+        .split("/")
+        .map(function (seg) {
+          return encodeURIComponent(seg);
+        })
+        .join("/")
+    );
+  }
+
+  function slugFromHref(href) {
+    try {
+      var url = new URL(href, window.location.origin);
+      var bp = basePath();
+      var slug = url.pathname;
+      if (bp && slug.indexOf(bp) === 0) slug = slug.slice(bp.length);
+      slug = slug.replace(/^\\/+/, "").replace(/\\/+$/, "");
+      return slug || "index";
+    } catch (e) {
+      return href;
+    }
+  }
+
+  function labelFor(slug) {
+    var parts = slug.split("/");
+    return decodeURIComponent(parts[parts.length - 1] || slug);
+  }
+
+  function ensureContainer() {
+    if (container) return container;
+    container = document.createElement("div");
+    container.id = "tcp-stack-container";
+    document.body.appendChild(container);
+    closeBtn = document.createElement("button");
+    closeBtn.className = "tcp-stack-close";
+    closeBtn.textContent = "\\u00d7";
+    closeBtn.setAttribute("aria-label", "Close stacked view");
+    closeBtn.addEventListener("click", closeStack);
+    document.body.appendChild(closeBtn);
+    return container;
+  }
+
+  function closeStack() {
+    setTrail([]);
+    document.body.classList.remove("tcp-stack-active");
+    if (container) container.classList.remove("active");
+  }
+
+  function attachLinkInterception(doc, onOpen) {
+    if (!doc || doc.__tcpIntercepted) return;
+    doc.__tcpIntercepted = true;
+    doc.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest(".markdown-preview-view a.internal");
+      if (!a) return;
+      var href = a.getAttribute("href");
+      if (!href || href.indexOf("#") === 0) return;
+      e.preventDefault();
+      onOpen(a);
+    });
+  }
+
+  function render() {
+    var trail = getTrail();
+    if (trail.length < 2) {
+      document.body.classList.remove("tcp-stack-active");
+      if (container) container.classList.remove("active");
+      return;
+    }
+    document.body.classList.add("tcp-stack-active");
+    var el = ensureContainer();
+    el.classList.add("active");
+    el.innerHTML = "";
+
+    var splitAt = Math.max(0, trail.length - VISIBLE_COUNT);
+    var collapsedSlugs = trail.slice(0, splitAt);
+    var expandedSlugs = trail.slice(splitAt);
+
+    collapsedSlugs.forEach(function (slug, idx) {
+      var tab = document.createElement("div");
+      tab.className = "tcp-stack-tab";
+      var label = document.createElement("div");
+      label.className = "tcp-stack-tab-label";
+      label.textContent = labelFor(slug);
+      tab.appendChild(label);
+      tab.addEventListener("click", function () {
+        setTrail(trail.slice(0, idx + 1));
+        render();
+      });
+      el.appendChild(tab);
+    });
+
+    expandedSlugs.forEach(function (slug) {
+      var pane = document.createElement("div");
+      pane.className = "tcp-stack-pane";
+      var bar = document.createElement("div");
+      bar.className = "tcp-stack-pane-bar";
+      bar.textContent = labelFor(slug);
+      pane.appendChild(bar);
+      var iframe = document.createElement("iframe");
+      iframe.src = slugToHref(slug);
+      iframe.addEventListener("load", function () {
+        try {
+          attachLinkInterception(iframe.contentDocument, function (a) {
+            var newSlug = slugFromHref(a.getAttribute("href"));
+            var t = getTrail();
+            t.push(newSlug);
+            setTrail(t);
+            render();
+          });
+        } catch (e) {
+          console.warn("[tcp-stack] cannot access iframe document", e);
+        }
+      });
+      pane.appendChild(iframe);
+      el.appendChild(pane);
+    });
+  }
+
+  function setupTopLevel() {
+    attachLinkInterception(document, function (a) {
+      var newSlug = slugFromHref(a.getAttribute("href"));
+      setTrail([currentSlug(), newSlug]);
+      render();
+    });
+    render();
+  }
+
+  document.addEventListener("nav", setupTopLevel);
+})();
 `,
           }}
         />
