@@ -16,13 +16,9 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      title:
-        name: ZCOOL XiaoWei
-        weights: [400]
-      header:
-        name: ZCOOL XiaoWei
-        weights: [400]
-      body: Noto Sans SC
+      title: Nunito Sans
+      header: Nunito Sans
+      body: Nunito Sans
       code: IBM Plex Mono
     colors:
       lightMode:
@@ -31,7 +27,7 @@ configuration:
         gray: "#b7b5ac"
         darkgray: "#6f6e69"
         dark: "#100f0f"
-        secondary: "#cdd597"
+        secondary: "#43413c"
         tertiary: "#fcc192"
         highlight: "#dad8ce"
         textHighlight: "#f1d67e"
@@ -41,7 +37,7 @@ configuration:
         gray: "#575653"
         darkgray: "#878580"
         dark: "#cecdc3"
-        secondary: "#cdd597"
+        secondary: "#b7b5ac"
         tertiary: "#fcc192"
         highlight: "#879a39"
         textHighlight: "#4385be"

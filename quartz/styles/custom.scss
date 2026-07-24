@@ -2,14 +2,49 @@
 
 // put your custom CSS here!
 
+// Chinese characters fall back to a Song-style serif (Nunito Sans has no
+// CJK glyphs), so English renders in Nunito Sans and Chinese in Noto Serif SC.
+// The Noto Serif SC stylesheet itself is loaded via a <link> in Head.tsx.
+:root {
+  --headerFont: "Nunito Sans", "Noto Serif SC", system-ui, sans-serif;
+  --bodyFont: "Nunito Sans", "Noto Serif SC", system-ui, sans-serif;
+  --titleFont: "Nunito Sans", "Noto Serif SC", system-ui, sans-serif;
+}
+
 // Explorer sidebar: mark each article title with a small bullet so
 // wrapped multi-line titles stay visually separated, and lighten the
 // weight so titles read distinctly from bold folder headers.
 .nav-file-title {
   font-weight: 400;
+  font-size: 0.85rem;
 
   &::before {
     content: "· ";
     color: var(--gray);
   }
+}
+
+// Tags: small, outlined, single-row pills instead of filled color badges.
+.tag-link {
+  background: transparent;
+  color: var(--darkgray);
+  border: 1px solid var(--lightgray);
+  font-size: 0.7rem;
+}
+
+.tag-link:hover {
+  background: var(--lightgray);
+  color: var(--dark);
+}
+
+ul.tags {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 0.3rem;
+}
+
+ul.tags > li {
+  flex: 0 0 auto;
+  margin-right: 0;
 }
