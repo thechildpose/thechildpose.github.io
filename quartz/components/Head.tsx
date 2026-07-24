@@ -110,6 +110,124 @@ export default (() => {
             return resource
           }
         })}
+        <script
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: `
+(function () {
+  function basePath() {
+    return (document.body && document.body.dataset && document.body.dataset.basepath) || "";
+  }
+
+  function folderHrefFor(ul) {
+    var parentLi = ul.closest("li");
+    var container = parentLi && parentLi.querySelector(":scope > .folder-container");
+    var folderPath = container && container.dataset && container.dataset.folderpath;
+    if (!folderPath) return null;
+    return basePath() + "/" + encodeURI(folderPath) + "/";
+  }
+
+  function truncateFolder(ul) {
+    if (ul.dataset.truncated === "done") return;
+    var fileItems = Array.prototype.filter.call(ul.children, function (li) {
+      return li.querySelector && li.querySelector(":scope > a.nav-file-title");
+    });
+    if (fileItems.length <= 6) {
+      ul.dataset.truncated = "done";
+      return;
+    }
+    fileItems.forEach(function (li, i) {
+      li.style.display = i < 6 ? "" : "none";
+    });
+    if (!ul.querySelector(":scope > li.explorer-more-link")) {
+      var href = folderHrefFor(ul);
+      if (href) {
+        var li = document.createElement("li");
+        li.className = "explorer-more-link";
+        var a = document.createElement("a");
+        a.href = href;
+        a.textContent = "more...";
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
+    }
+    ul.dataset.truncated = "done";
+  }
+
+  function enforceAccordion(ul) {
+    var openFolders = Array.prototype.filter.call(ul.children, function (li) {
+      return li.querySelector && li.querySelector(":scope > .folder-outer.open");
+    });
+    if (openFolders.length <= 1) return;
+    var keep =
+      openFolders.find(function (li) {
+        return li.querySelector("a.active, a.is-active");
+      }) || openFolders[0];
+    openFolders.forEach(function (li) {
+      if (li === keep) return;
+      var outer = li.querySelector(":scope > .folder-outer.open");
+      if (outer) outer.classList.remove("open");
+    });
+  }
+
+  function processExplorer() {
+    document
+      .querySelectorAll(".explorer-content ul.content, .explorer-content ul.explorer-ul")
+      .forEach(function (ul) {
+        truncateFolder(ul);
+        enforceAccordion(ul);
+      });
+  }
+
+  function collapseSiblings(openedFolderOuter) {
+    var parentLi = openedFolderOuter.closest("li");
+    var parentUl = parentLi && parentLi.parentElement;
+    if (!parentUl) return;
+    Array.prototype.forEach.call(parentUl.children, function (sibling) {
+      if (sibling === parentLi) return;
+      var outer = sibling.querySelector(":scope > .folder-outer.open");
+      if (outer) outer.classList.remove("open");
+    });
+  }
+
+  var observer;
+  function setup() {
+    var explorer = document.querySelector(".explorer");
+    if (!explorer) return;
+    processExplorer();
+    if (observer) observer.disconnect();
+    observer = new MutationObserver(function (mutations) {
+      var needsTruncate = false;
+      for (var i = 0; i < mutations.length; i++) {
+        var m = mutations[i];
+        if (m.type === "childList") needsTruncate = true;
+        if (m.type === "attributes" && m.attributeName === "class") {
+          var target = m.target;
+          if (
+            target.classList &&
+            target.classList.contains("folder-outer") &&
+            target.classList.contains("open")
+          ) {
+            collapseSiblings(target);
+          }
+        }
+      }
+      if (needsTruncate) processExplorer();
+    });
+    observer.observe(explorer, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
+  document.addEventListener("nav", setup);
+  document.addEventListener("render", setup);
+})();
+`,
+          }}
+        />
       </head>
     )
   }
