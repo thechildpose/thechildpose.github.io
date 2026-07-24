@@ -54,12 +54,18 @@ for (const file of files) {
 
   const [, frontmatterRaw, body] = match
   const frontmatter = YAML.parse(frontmatterRaw) ?? {}
-  if (frontmatter.publish !== true) continue
+  const isPublished = frontmatter.publish === true || frontmatter.published === true
+  if (!isPublished) continue
+
+  // `published` doubles as the output's display-date field below, so clear
+  // out the boolean value first (covers the common `published: true` typo
+  // for what should be `publish: true`) to avoid colliding with that.
+  delete frontmatter.published
 
   if (!frontmatter.title) {
     frontmatter.title = frontmatter.标题 || stripBracketTags(path.basename(file, ".md"))
   }
-  if (!frontmatter.published && frontmatter.发表日期) {
+  if (frontmatter.发表日期) {
     frontmatter.published = frontmatter.发表日期
   }
 
