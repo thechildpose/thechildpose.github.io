@@ -268,7 +268,7 @@ plugins:
       priority: 100
       display: all
   - source: "@quartz-community/stacked-pages"
-    enabled: true
+    enabled: false
     options:
       maxTabs: 6
       mobileBreakpoint: 800
