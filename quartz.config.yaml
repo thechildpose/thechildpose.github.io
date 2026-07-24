@@ -268,7 +268,12 @@ plugins:
       priority: 100
       display: all
   - source: "@quartz-community/stacked-pages"
-    enabled: false
+    enabled: true
+    options:
+      maxTabs: 6
+      mobileBreakpoint: 800
+      showSpines: true
+      animateTransitions: true
     layout:
       position: afterBody
       priority: 50
