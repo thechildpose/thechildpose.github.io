@@ -2,13 +2,14 @@
 
 // put your custom CSS here!
 
-// Chinese characters fall back to a Song-style serif (Nunito Sans has no
-// CJK glyphs), so English renders in Nunito Sans and Chinese in Noto Serif SC.
-// The Noto Serif SC stylesheet itself is loaded via a <link> in Head.tsx.
+// Chinese characters fall back to a Song-style serif (Times New Roman has no
+// CJK glyphs), so English renders in Times New Roman and Chinese in Noto Serif SC.
+// Times New Roman is a system font (no fetch needed); Noto Serif SC is loaded
+// via a <link> in Head.tsx.
 :root {
-  --headerFont: "Nunito Sans", "Noto Serif SC", system-ui, sans-serif;
-  --bodyFont: "Nunito Sans", "Noto Serif SC", system-ui, sans-serif;
-  --titleFont: "Nunito Sans", "Noto Serif SC", system-ui, sans-serif;
+  --headerFont: "Times New Roman", "Noto Serif SC", serif;
+  --bodyFont: "Times New Roman", "Noto Serif SC", serif;
+  --titleFont: "Times New Roman", "Noto Serif SC", serif;
 }
 
 // Explorer sidebar: mark each article title with a small bullet so

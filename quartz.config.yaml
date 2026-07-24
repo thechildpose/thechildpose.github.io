@@ -16,9 +16,9 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      title: Nunito Sans
-      header: Nunito Sans
-      body: Nunito Sans
+      title: Noto Serif SC
+      header: Noto Serif SC
+      body: Noto Serif SC
       code: IBM Plex Mono
     colors:
       lightMode:
@@ -27,7 +27,7 @@ configuration:
         gray: "#b7b5ac"
         darkgray: "#6f6e69"
         dark: "#100f0f"
-        secondary: "#43413c"
+        secondary: "#000000"
         tertiary: "#fcc192"
         highlight: "#dad8ce"
         textHighlight: "#f1d67e"
