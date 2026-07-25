@@ -10,8 +10,11 @@ tags:
 译文: null
 weight: core
 网站文件夹: Paul Graham 译文专题
+publish: true
 title: Paul Graham可谓是新手父母的创业教父，常看常新
 published: 2026-06-17
+aliases:
+  - 【xhs】【网站】PG- 创造者的品味 taste for makers
 ---
 2026年6月17日
 

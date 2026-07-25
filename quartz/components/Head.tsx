@@ -264,16 +264,10 @@ export default (() => {
   }
 
   function slugToHref(slug) {
-    return (
-      basePath() +
-      "/" +
-      slug
-        .split("/")
-        .map(function (seg) {
-          return encodeURIComponent(seg);
-        })
-        .join("/")
-    );
+    // slug segments come from url.pathname / location.pathname, which the
+    // browser already returns percent-encoded — encoding again here would
+    // turn "%E3" into "%25E3" and 404.
+    return basePath() + "/" + slug;
   }
 
   function slugFromHref(href) {

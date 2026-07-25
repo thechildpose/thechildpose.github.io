@@ -11,6 +11,8 @@ publish: true
 网站文件夹: Paul Graham 译文专题
 title: 如何用自己的脑子想 how to think for yourself
 published: 2026-05-06
+aliases:
+  - 【xhs】【网站】独立-如何用自己的脑子想 how to think for yourself- PG
 ---
 本篇我帮Paul Graham投稿小红书的万事皆可how to.
 

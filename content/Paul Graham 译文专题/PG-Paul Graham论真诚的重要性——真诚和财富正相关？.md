@@ -13,6 +13,8 @@ weight: standard
 网站文件夹: Paul Graham 译文专题
 title: Paul Graham论真诚的重要性——真诚和财富正相关？
 published: 2026-03-25
+aliases:
+  - 【xhs】【网站】PG-Paul Graham论真诚的重要性——真诚和财富正相关？
 ---
 2026年3月25日
 

@@ -5,6 +5,8 @@ publish: true
 tags:
   - 独立意志
 类型: null
+aliases:
+  - 【xhs】【网站】独立：听话和listen to me
 ---
 
 

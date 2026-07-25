@@ -11,6 +11,8 @@ weight: standard
 网站文件夹: 学习理念 Learning Mechanism
 title: 《数学觉醒》是数学学习的九阴真经么？
 published: 2026-06-26
+aliases:
+  - 【xhs】【网站】数学-介绍《数学觉醒》Mathematica
 ---
 2026年6月26日
 

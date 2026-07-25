@@ -12,6 +12,8 @@ publish: true
 网站文件夹: Paul Graham 译文专题
 title: 帮助你的孩子把兴趣深入到荒唐的地步
 published: 2026-05-21
+aliases:
+  - 【xhs】【网站】帮助你的孩子把兴趣深入到荒唐的地步-PG（天才的公交车理论）
 ---
 2026年5月21日
 

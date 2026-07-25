@@ -77,8 +77,27 @@ for (const file of files) {
   const targetDir = category ? path.join(DEST_DIR, category) : DEST_DIR
   fs.mkdirSync(targetDir, { recursive: true })
 
+  // The URL slug comes straight from this output filename, so strip the
+  // Obsidian bracket tags (【xhs】【网站】etc.) that clutter the raw vault
+  // filename. An explicit `slug` field in frontmatter overrides this.
+  const rawName = path.basename(file, ".md")
+  const outputName =
+    typeof frontmatter.slug === "string" && frontmatter.slug.trim()
+      ? frontmatter.slug.trim()
+      : stripBracketTags(rawName)
+
+  // If the slug changed from the raw filename, keep the old name as an
+  // alias so alias-redirects generates a redirect page there — this covers
+  // existing wikilinks elsewhere that still reference the old filename, and
+  // any already-shared/indexed links to the old URL.
+  if (outputName !== rawName) {
+    const aliases = Array.isArray(frontmatter.aliases) ? frontmatter.aliases : []
+    if (!aliases.includes(rawName)) aliases.push(rawName)
+    frontmatter.aliases = aliases
+  }
+
   const newRaw = `---\n${YAML.stringify(frontmatter)}---\n${publicBody}`
-  fs.writeFileSync(path.join(targetDir, file), newRaw, "utf-8")
+  fs.writeFileSync(path.join(targetDir, `${outputName}.md`), newRaw, "utf-8")
   publishedCount++
 }
 

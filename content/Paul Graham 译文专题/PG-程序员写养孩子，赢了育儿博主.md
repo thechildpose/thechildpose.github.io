@@ -11,6 +11,8 @@ weight: standard
 网站文件夹: Paul Graham 译文专题
 title: 程序员写养孩子，赢了育儿博主
 published: 2026-03-25
+aliases:
+  - 【xhs】【网站】PG-程序员写养孩子，赢了育儿博主
 ---
 2026年3月25日
 

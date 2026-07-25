@@ -11,6 +11,8 @@ tags:
 网站文件夹: 基础理念 Fundamentals
 title: 看完deepmind的纪录片，感慨：连AI都有10年的explore时期，人类孩子呢？
 published: 2026-05-11
+aliases:
+  - 【xhs】【网站】自主-看完deepmind的纪录片，感慨：连AI都有10年的explore时期，人类孩子呢？
 ---
 标题：看完deepmind的纪录片，感慨：连AI都有10年的explore时期，人类孩子呢？
 
