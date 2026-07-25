@@ -317,6 +317,7 @@ export default (() => {
       var href = a.getAttribute("href");
       if (!href || href.indexOf("#") === 0) return;
       e.preventDefault();
+      e.stopPropagation();
       onOpen(a);
     });
   }
