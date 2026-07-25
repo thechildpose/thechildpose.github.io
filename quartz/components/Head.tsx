@@ -227,6 +227,12 @@ export default (() => {
 })();
 
 (function () {
+  // This whole script also loads inside the iframes it creates (each pane
+  // renders a full page, head and all). Without this guard, every framed
+  // page would spin up its own container and re-fetch the same trail from
+  // sessionStorage, nesting iframes inside iframes indefinitely.
+  if (window.self !== window.top) return;
+
   var STORAGE_KEY = "tcp-stack-trail";
   var VISIBLE_COUNT = 2;
   var container, closeBtn;
