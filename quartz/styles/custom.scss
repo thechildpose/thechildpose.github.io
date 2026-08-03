@@ -12,16 +12,82 @@
   --titleFont: "Times New Roman", "Noto Serif SC", serif;
 }
 
-// Explorer sidebar: mark each article title with a small bullet so
-// wrapped multi-line titles stay visually separated, and lighten the
-// weight so titles read distinctly from bold folder headers.
+// Sidebar site title ("The Child's Pose" / "儿童姿态") is one string with an
+// embedded newline (see pageTitle in quartz.config.yaml) — render it as two
+// lines instead of letting the browser collapse the newline to a space.
+.page-title a {
+  white-space: pre-line;
+  line-height: 1.3;
+}
+
+// Article body: plain black prose, blue hyperlinks. Scoped to the rendered
+// markdown content only, not site chrome (sidebar/explorer keep their own
+// link color).
+.markdown-preview-view {
+  color: #000;
+
+  a {
+    color: #1a56db;
+
+    &:hover {
+      color: var(--tertiary);
+    }
+  }
+}
+
+// Properties panel: this site only surfaces tags here (see note-properties
+// options in quartz.config.yaml), so strip the collapsible header/table
+// chrome down to a plain left-aligned tag row.
+.note-properties {
+  border: none;
+  margin: 0.5rem 0 1rem;
+
+  .note-properties-header {
+    display: none;
+  }
+
+  .note-properties-table {
+    width: auto;
+  }
+
+  .note-properties-row {
+    border-bottom: none;
+  }
+
+  .note-properties-key {
+    display: none;
+  }
+
+  .note-properties-value {
+    padding: 0;
+    text-align: left;
+  }
+
+  .note-properties-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+}
+
+// Explorer sidebar: mark each article title with a small square (page)
+// icon so wrapped multi-line titles stay visually separated, and lighten
+// the weight so titles read distinctly from bold folder headers. A solid
+// square reads more clearly at this size than a thin dot.
 .nav-file-title {
   font-weight: 400;
   font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
 
   &::before {
-    content: "· ";
-    color: var(--gray);
+    content: "";
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    background: var(--gray);
+    flex-shrink: 0;
   }
 }
 
@@ -66,6 +132,32 @@ ul.tags > li {
   display: flex;
 }
 
+#tcp-stack-container {
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+
+#tcp-stack-container.tcp-slide-out-left {
+  transform: translateX(-24px);
+  opacity: 0;
+}
+
+#tcp-stack-container.tcp-slide-out-right {
+  transform: translateX(24px);
+  opacity: 0;
+}
+
+#tcp-stack-container.tcp-slide-in-from-left {
+  transform: translateX(-24px);
+  opacity: 0;
+}
+
+#tcp-stack-container.tcp-slide-in-from-right {
+  transform: translateX(24px);
+  opacity: 0;
+}
+
 .tcp-stack-tab {
   flex: 0 0 36px;
   width: 36px;
@@ -75,6 +167,7 @@ ul.tags > li {
   align-items: center;
   justify-content: center;
   background: var(--lightgray);
+  touch-action: pan-y;
 }
 
 .tcp-stack-tab:hover {
@@ -83,7 +176,6 @@ ul.tags > li {
 
 .tcp-stack-tab-label {
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,6 +198,8 @@ ul.tags > li {
   border-bottom: 1px solid var(--lightgray);
   font-size: 0.8rem;
   color: var(--darkgray);
+  cursor: pointer;
+  touch-action: pan-y;
 }
 
 .tcp-stack-pane iframe {

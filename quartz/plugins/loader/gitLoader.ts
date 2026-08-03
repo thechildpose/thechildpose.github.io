@@ -1036,7 +1036,11 @@ export async function regeneratePluginIndex(
     const overridable = named.filter((n) => isOverridableExport(n, dtsContent))
     const passthrough = named.filter((n) => !isOverridableExport(n, dtsContent))
 
-    const key = npmPkg.replace(/^@/, "").replace(/\//g, "__")
+    // Must match `spec.name` in config-loader.ts's instantiate(), which for
+    // npm-scoped plugins is the raw package string (e.g.
+    // "@quartz-community/explorer") — that's the key componentRegistry
+    // overrides get looked up by, so this can't be a sanitized identifier.
+    const key = npmPkg
     if (overridable.length > 0 || passthrough.length > 0 || types.length > 0) {
       pluginExports.set(key, { overridable, passthrough, types })
       importPath.set(key, npmPkg)

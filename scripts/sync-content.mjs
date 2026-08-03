@@ -2,7 +2,8 @@ import fs from "fs"
 import path from "path"
 import YAML from "yaml"
 
-const VAULT_ROOT = "/Users/sylvia/Library/Mobile Documents/com~apple~CloudDocs/Obsidian/Second-Brain"
+const VAULT_ROOT =
+  "/Users/sylvia/Library/Mobile Documents/com~apple~CloudDocs/Obsidian/Second-Brain"
 const VAULT_DIR = path.join(VAULT_ROOT, "raw", "1-mywriting")
 const ATTACHMENTS_DIR = path.join(VAULT_ROOT, "attachments")
 const DEST_DIR = path.join(import.meta.dirname, "..", "content")
@@ -89,6 +90,9 @@ for (const file of files) {
   if (frontmatter.发表日期) {
     frontmatter.published = frontmatter.发表日期
   }
+  if (Array.isArray(frontmatter.tags)) {
+    frontmatter.tags = [...frontmatter.tags].sort((a, b) => a.localeCompare(b, "zh"))
+  }
 
   const rawName = path.basename(file, ".md")
   const outputName =
@@ -106,7 +110,8 @@ for (const { rawName, outputName, frontmatter, body } of parsed) {
   const publicBody = rewireWikilinks(extractPublicBody(body), articleMap)
   syncEmbeddedAttachments(publicBody)
 
-  const rawCategory = typeof frontmatter.网站文件夹 === "string" ? frontmatter.网站文件夹.trim() : ""
+  const rawCategory =
+    typeof frontmatter.网站文件夹 === "string" ? frontmatter.网站文件夹.trim() : ""
   const category = CATEGORY_RENAMES[rawCategory] ?? rawCategory
   const targetDir = category ? path.join(DEST_DIR, category) : DEST_DIR
   fs.mkdirSync(targetDir, { recursive: true })

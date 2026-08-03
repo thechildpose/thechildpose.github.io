@@ -124,7 +124,12 @@ export default (() => {
     var container = parentLi && parentLi.querySelector(":scope > .folder-container");
     var folderPath = container && container.dataset && container.dataset.folderpath;
     if (!folderPath) return null;
-    return basePath() + "/" + encodeURI(folderPath) + "/";
+    // dataset.folderpath is the trie node's slug, which for a folder is
+    // "segments/joined/by/slash/index" — strip that trailing "/index" (or
+    // bare "index" at the root) to get the folder's actual page path,
+    // otherwise this links to ".../folder/index/", which 404s.
+    var clean = folderPath.replace(/(^|\/)index$/, "");
+    return basePath() + "/" + encodeURI(clean) + "/";
   }
 
   function truncateFolder(ul) {
@@ -227,6 +232,25 @@ export default (() => {
 })();
 
 (function () {
+  // The left sidebar (with the site title) is position:sticky and stays on
+  // screen for the whole scroll of an article. While reading an article,
+  // show that article's own title there instead of the site title — it's
+  // more useful than a redundant, unchanging site name.
+  var originalTitleText = null;
+
+  function syncSidebarTitle() {
+    var link = document.querySelector(".page-title a");
+    if (!link) return;
+    if (originalTitleText === null) originalTitleText = link.textContent;
+    var articleTitle = document.querySelector(".article-title");
+    link.textContent = articleTitle ? articleTitle.textContent : originalTitleText;
+  }
+
+  document.addEventListener("nav", syncSidebarTitle);
+  document.addEventListener("render", syncSidebarTitle);
+})();
+
+(function () {
   // This whole script also loads inside the iframes it creates (each pane
   // renders a full page, head and all). Without this guard, every framed
   // page would spin up its own container and re-fetch the same trail from
@@ -322,7 +346,46 @@ export default (() => {
     });
   }
 
-  function render() {
+  // Attaches a horizontal-swipe/drag gesture to el via Pointer Events (covers
+  // touch + mouse in one listener set). Fires onSwipeLeft/onSwipeRight once
+  // the horizontal drag exceeds the threshold px and dominates any vertical
+  // movement, so it doesn't fight normal page/article scrolling.
+  function attachSwipe(el, threshold, onSwipeLeft, onSwipeRight) {
+    var startX = null;
+    var startY = null;
+    var dragging = false;
+    var dx = 0;
+    var dy = 0;
+
+    el.addEventListener("pointerdown", function (e) {
+      startX = e.clientX;
+      startY = e.clientY;
+      dragging = true;
+      dx = 0;
+      dy = 0;
+    });
+    el.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      dx = e.clientX - startX;
+      dy = e.clientY - startY;
+    });
+    function finish() {
+      if (!dragging) return;
+      dragging = false;
+      if (Math.abs(dx) >= threshold && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) onSwipeLeft && onSwipeLeft();
+        else onSwipeRight && onSwipeRight();
+      }
+    }
+    el.addEventListener("pointerup", finish);
+    el.addEventListener("pointercancel", function () {
+      dragging = false;
+    });
+  }
+
+  // dir is "expand" (a collapsed tab opening), "collapse" (an open pane
+  // closing back to a tab), or omitted (no animation, e.g. first render).
+  function render(dir) {
     var trail = getTrail();
     if (trail.length < 2) {
       document.body.classList.remove("tcp-stack-active");
@@ -332,58 +395,91 @@ export default (() => {
     document.body.classList.add("tcp-stack-active");
     var el = ensureContainer();
     el.classList.add("active");
-    el.innerHTML = "";
 
-    var splitAt = Math.max(0, trail.length - VISIBLE_COUNT);
-    var collapsedSlugs = trail.slice(0, splitAt);
-    var expandedSlugs = trail.slice(splitAt);
+    function build() {
+      el.innerHTML = "";
 
-    collapsedSlugs.forEach(function (slug, idx) {
-      var tab = document.createElement("div");
-      tab.className = "tcp-stack-tab";
-      var label = document.createElement("div");
-      label.className = "tcp-stack-tab-label";
-      label.textContent = labelFor(slug);
-      tab.appendChild(label);
-      tab.addEventListener("click", function () {
-        setTrail(trail.slice(0, idx + 1));
-        render();
-      });
-      el.appendChild(tab);
-    });
+      var splitAt = Math.max(0, trail.length - VISIBLE_COUNT);
+      var collapsedSlugs = trail.slice(0, splitAt);
+      var expandedSlugs = trail.slice(splitAt);
 
-    expandedSlugs.forEach(function (slug) {
-      var pane = document.createElement("div");
-      pane.className = "tcp-stack-pane";
-      var bar = document.createElement("div");
-      bar.className = "tcp-stack-pane-bar";
-      bar.textContent = labelFor(slug);
-      pane.appendChild(bar);
-      var iframe = document.createElement("iframe");
-      iframe.src = slugToHref(slug);
-      iframe.addEventListener("load", function () {
-        try {
-          attachLinkInterception(iframe.contentDocument, function (a) {
-            var newSlug = slugFromHref(a.getAttribute("href"));
-            var t = getTrail();
-            t.push(newSlug);
-            setTrail(t);
-            render();
-          });
-        } catch (e) {
-          console.warn("[tcp-stack] cannot access iframe document", e);
+      collapsedSlugs.forEach(function (slug, idx) {
+        var tab = document.createElement("div");
+        tab.className = "tcp-stack-tab";
+        var label = document.createElement("div");
+        label.className = "tcp-stack-tab-label";
+        label.textContent = labelFor(slug);
+        tab.appendChild(label);
+        function expandThis() {
+          setTrail(trail.slice(0, idx + 1));
+          render("expand");
         }
+        tab.addEventListener("click", expandThis);
+        attachSwipe(tab, 24, expandThis, expandThis);
+        el.appendChild(tab);
       });
-      pane.appendChild(iframe);
-      el.appendChild(pane);
-    });
+
+      expandedSlugs.forEach(function (slug, i) {
+        var idxInTrail = splitAt + i;
+        var pane = document.createElement("div");
+        pane.className = "tcp-stack-pane";
+        var bar = document.createElement("div");
+        bar.className = "tcp-stack-pane-bar";
+        bar.textContent = labelFor(slug);
+        function collapseThis() {
+          setTrail(trail.slice(0, idxInTrail));
+          render("collapse");
+        }
+        bar.addEventListener("click", collapseThis);
+        attachSwipe(bar, 32, collapseThis, collapseThis);
+        pane.appendChild(bar);
+        var iframe = document.createElement("iframe");
+        iframe.src = slugToHref(slug);
+        iframe.addEventListener("load", function () {
+          try {
+            attachLinkInterception(iframe.contentDocument, function (a) {
+              var newSlug = slugFromHref(a.getAttribute("href"));
+              var t = getTrail();
+              t.push(newSlug);
+              setTrail(t);
+              render("expand");
+            });
+          } catch (e) {
+            console.warn("[tcp-stack] cannot access iframe document", e);
+          }
+        });
+        pane.appendChild(iframe);
+        el.appendChild(pane);
+      });
+    }
+
+    if (!dir) {
+      build();
+      return;
+    }
+
+    // Slide the old content out, swap the DOM, then slide the new content
+    // in from the opposite side.
+    var outClass = dir === "expand" ? "tcp-slide-out-left" : "tcp-slide-out-right";
+    var inClass = dir === "expand" ? "tcp-slide-in-from-right" : "tcp-slide-in-from-left";
+    el.classList.add(outClass);
+    setTimeout(function () {
+      build();
+      el.classList.remove(outClass);
+      el.classList.add(inClass);
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          el.classList.remove(inClass);
+        });
+      });
+    }, 180);
   }
 
   function setupTopLevel() {
     attachLinkInterception(document, function (a) {
       var newSlug = slugFromHref(a.getAttribute("href"));
       setTrail([currentSlug(), newSlug]);
-      render();
+      render("expand");
     });
     render();
   }
