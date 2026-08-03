@@ -14,26 +14,6 @@ published: 2026-05-11
 aliases:
   - 【xhs】【网站】自主-看完deepmind的纪录片，感慨：连AI都有10年的explore时期，人类孩子呢？
 ---
-标题：看完deepmind的纪录片，感慨：连AI都有10年的explore时期，人类孩子呢？
-
-观点：explore和exploit要螺旋上升。explore要给足时间。竞争是exploit后期才引入的。小学时期应该给足exploration。
-
-标签：
-
-exploration vs exploitation
-
-deepmind
-
-AI vs HI （human Intelligence)
-
-  
-
-  
-
-正文
-
-  
-
 看完Deepmind的纪录片The Thinking Game，深受震动和感动。不过具体还是说说和孩子教育相关的一个点：
 
 Demis在给Deepmind融资期间，他很明确目标是找一个“只是对此激动而不总想着变现”的投资人。从Deepmind成立到Alpha Fold 1参加CASP（以解决蛋白质折叠的重要生物学问题），大概是8年时间。Fold 1虽然赢了CASP13，但他们也发现这条路只是赢了“其他也不太行的人而已”，无法达到对科研有用的精度。然后推倒重来，完全重建了系统，最后有了AlphaFold 2，并在2020年达到了科研有效精度，因此获得了诺贝尔化学奖。
@@ -100,7 +80,7 @@ Gopnik在文中提到，0-6岁是exploration的核心期，6岁之后，进入ex
 
   
 
-  
+# 其他
 
   
 

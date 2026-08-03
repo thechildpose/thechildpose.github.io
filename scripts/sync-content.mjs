@@ -44,8 +44,29 @@ function syncEmbeddedAttachments(body) {
   }
 }
 
+// Rewrites plain `[[target]]` / `[[target#heading]]` wikilinks (no existing
+// custom `|alias`, and not an `![[embed]]`) that point at another published
+// article: display text becomes that article's resolved title instead of
+// the raw filename, and the link target becomes its clean output slug
+// (skipping the alias-redirect hop). Links with an existing `|alias`, or
+// pointing at files outside `articleMap`, are left untouched.
+function rewireWikilinks(body, articleMap) {
+  const wikilinkPattern = /(?<!!)\[\[([^\]|#]+)(#[^\]|]+)?(\|[^\]]+)?\]\]/g
+  return body.replace(wikilinkPattern, (whole, target, heading, alias) => {
+    if (alias) return whole
+    const info = articleMap.get(target.trim())
+    if (!info) return whole
+    return `[[${info.outputName}${heading ?? ""}|${info.title}]]`
+  })
+}
+
 const files = fs.readdirSync(VAULT_DIR).filter((f) => f.endsWith(".md"))
-let publishedCount = 0
+
+// Pass 1: parse every published article and resolve its title + clean slug,
+// without writing anything yet — later articles' wikilinks may reference
+// earlier or later files in read-order, so the full map must exist first.
+const articleMap = new Map()
+const parsed = []
 
 for (const file of files) {
   const raw = fs.readFileSync(path.join(VAULT_DIR, file), "utf-8")
@@ -69,7 +90,20 @@ for (const file of files) {
     frontmatter.published = frontmatter.发表日期
   }
 
-  const publicBody = extractPublicBody(body)
+  const rawName = path.basename(file, ".md")
+  const outputName =
+    typeof frontmatter.slug === "string" && frontmatter.slug.trim()
+      ? frontmatter.slug.trim()
+      : stripBracketTags(rawName)
+
+  articleMap.set(rawName, { outputName, title: frontmatter.title })
+  parsed.push({ file, rawName, outputName, frontmatter, body })
+}
+
+// Pass 2: rewrite wikilinks against the full map, then write output files.
+let publishedCount = 0
+for (const { rawName, outputName, frontmatter, body } of parsed) {
+  const publicBody = rewireWikilinks(extractPublicBody(body), articleMap)
   syncEmbeddedAttachments(publicBody)
 
   const rawCategory = typeof frontmatter.网站文件夹 === "string" ? frontmatter.网站文件夹.trim() : ""
@@ -77,19 +111,11 @@ for (const file of files) {
   const targetDir = category ? path.join(DEST_DIR, category) : DEST_DIR
   fs.mkdirSync(targetDir, { recursive: true })
 
-  // The URL slug comes straight from this output filename, so strip the
-  // Obsidian bracket tags (【xhs】【网站】etc.) that clutter the raw vault
-  // filename. An explicit `slug` field in frontmatter overrides this.
-  const rawName = path.basename(file, ".md")
-  const outputName =
-    typeof frontmatter.slug === "string" && frontmatter.slug.trim()
-      ? frontmatter.slug.trim()
-      : stripBracketTags(rawName)
-
   // If the slug changed from the raw filename, keep the old name as an
   // alias so alias-redirects generates a redirect page there — this covers
-  // existing wikilinks elsewhere that still reference the old filename, and
-  // any already-shared/indexed links to the old URL.
+  // any already-shared/indexed links to the old URL (in-body wikilinks no
+  // longer need this now that rewireWikilinks points them at the new slug
+  // directly, but external links still do).
   if (outputName !== rawName) {
     const aliases = Array.isArray(frontmatter.aliases) ? frontmatter.aliases : []
     if (!aliases.includes(rawName)) aliases.push(rawName)
