@@ -9,6 +9,7 @@ tags:
 译文: null
 weight: standard
 网站文件夹: Paul Graham 译文专题
+publish: true
 title: PG写“品味好坏”——谈论taste不再冒犯人了
 published: 2026-04-20
 aliases:

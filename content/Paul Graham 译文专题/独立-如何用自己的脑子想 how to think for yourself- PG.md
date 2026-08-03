@@ -6,7 +6,7 @@ tags:
   - 独立意志
   - 对真相严谨
   - 好奇心
-原文: "[[PG-How to Think for Yourself]]"
+原文: "[[☑️PG-How to Think for Yourself]]"
 publish: true
 网站文件夹: Paul Graham 译文专题
 title: 如何用自己的脑子想 how to think for yourself

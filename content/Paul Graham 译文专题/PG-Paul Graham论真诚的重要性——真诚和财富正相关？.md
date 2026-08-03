@@ -7,7 +7,7 @@ tags:
   - 成功的条件
   - 创业
 类型: 译文
-原文: "[[PG-Earnestness]]"
+原文: "[[☑️PG-Earnestness]]"
 译文: null
 weight: standard
 网站文件夹: Paul Graham 译文专题

@@ -5,7 +5,7 @@
 tags:
   - 养育
 类型: 译文
-原文: "[[PG-Having Kids]]"
+原文: "[[☑️PG-Having Kids]]"
 译文: null
 weight: standard
 网站文件夹: Paul Graham 译文专题
